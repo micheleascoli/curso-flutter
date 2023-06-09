@@ -4,5 +4,6 @@ import 'package:navegacao/TelaPrincipal.dart';
 void main() {
   runApp(MaterialApp(
     home: TelaPrincipal(),
+    debugShowCheckedModeBanner: false,
   ));
 }
