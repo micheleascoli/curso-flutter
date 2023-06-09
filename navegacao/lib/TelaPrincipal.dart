@@ -22,12 +22,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
           children: [
             ElevatedButton(
               onPressed: (){
-                Navigator.push(
-                   context,
-                    MaterialPageRoute(
-                        builder: (context) => TelaSecundaria(valor:"Michele")
-                    )
-                );
+                Navigator.pushNamed(context, "/secundaria");
               },
               child: Text("Ir para a segunda tela"),
               style: ElevatedButton.styleFrom(padding: EdgeInsets.all(15)),
