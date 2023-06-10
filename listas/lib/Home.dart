@@ -54,13 +54,13 @@ class _HomeState extends State<Home> {
                           actions: [
                             TextButton(
                                 onPressed: (){
-
+                                  Navigator.pop(context);
                                 },
                                 child: Text("Sim")
                             ),
                             TextButton(
                                 onPressed: (){
-
+                                  Navigator.pop(context);
                                 },
                                 child: Text("Não")
                             ),
