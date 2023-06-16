@@ -14,19 +14,20 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  var _urlBase = Uri.parse("https://jsonplaceholder.typicode.com");
+  //var _urlBase = Uri.parse("https://jsonplaceholder.typicode.com");
+  String _urlBase = "https://jsonplaceholder.typicode.com";
 
-  Post post = Post(0, 1, "", "");
+  //Post post = Post(0, 1, "", "");
 
   Future<List<Post>> _recuperarPostagens() async {
 
-    Uri url = Uri.https(_urlBase as String, '/posts');
-    http.Response response = await http.get(url);
+    http.Response response = await http.get(Uri.parse(_urlBase+"/posts"));
     var dadosJson = json.decode( response.body );
 
     List<Post> postagens = [];
 
     for( var post in dadosJson ){
+      print("post: "+post["title"]);
       Post p = Post(post["userId"], post["id"], post["title"], post["body"]);
       postagens.add(p);
     }
@@ -42,11 +43,12 @@ class _HomeState extends State<Home> {
       body: FutureBuilder<List<Post>>(
         future: _recuperarPostagens(),
         builder: (context, snapshot){
+          var retorno;
 
           switch( snapshot.connectionState ){
             case ConnectionState.none :
             case ConnectionState.waiting :
-              return  Center(
+              retorno = Center(
                 child: CircularProgressIndicator(),
               );
               break;
@@ -57,18 +59,22 @@ class _HomeState extends State<Home> {
               } else {
                 print("lista: carregou!!");
 
-                return ListView.builder(
+                retorno = ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index){
+                      List<Post>? lista = snapshot.data;
+                      Post post = lista![index];
+
                       return ListTile(
-                        title: Text(" teste "),
-                        subtitle: Text("teste"),
+                        title: Text(post.title),
+                        subtitle: Text(post.id.toString()),
                       );
                     }
                 );
               }
               break;
           }
+          return retorno;
         },
       ),
     );
