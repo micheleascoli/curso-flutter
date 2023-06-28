@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:consumo_servico_avancado/Post.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -34,48 +36,132 @@ class _HomeState extends State<Home> {
     return postagens;
   }
 
+  _post() async {
+    Post post = new Post(120, 0,"Titulo2", "Corpo da postagem2");
+    var corpo = jsonEncode(
+      post.toJson()
+    );
+
+    http.Response response = await http.post(Uri.parse(
+        _urlBase+"/posts"),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: corpo
+    );
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+  }
+  _put() async {
+    Post post = new Post(120, 0,"Titulo2", "Corpo da postagem2");
+    var corpo = jsonEncode(
+        post.toJson()
+    );
+
+    http.Response response = await http.put(Uri.parse(
+        _urlBase+"/posts/2"),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: corpo
+    );
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+
+  }
+  _patch() async {
+    Post post = new Post(120, 0,"Titulo2", "Corpo da postagem2");
+    var corpo = jsonEncode(
+        post.toJson()
+    );
+    http.Response response = await http.patch(Uri.parse(
+        _urlBase+"/posts/2"),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        },
+        body: corpo
+    );
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+
+  }
+  _delete() async {
+    http.Response response = await http.delete(Uri.parse(
+        _urlBase+"/posts/2"),
+    );
+
+    print("resposta: ${response.statusCode}");
+    print("resposta: ${response.body}");
+
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Consumo de serviço avançado"),
       ),
-      body: FutureBuilder<List<Post>>(
-        future: _recuperarPostagens(),
-        builder: (context, snapshot){
-          var retorno;
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                ElevatedButton(
+                    onPressed: _post,
+                    child: Text("Salvar"),
+                ),
+                ElevatedButton(
+                  onPressed: _patch,
+                  child: Text("Atualizar"),
+                ),
+                ElevatedButton(
+                  onPressed: _delete,
+                  child: Text("Remover"),
+                )
+              ],
+            ),
+            Expanded(
+                child: FutureBuilder<List<Post>>(
+                  future: _recuperarPostagens(),
+                  builder: (context, snapshot){
+                    var retorno;
 
-          switch( snapshot.connectionState ){
-            case ConnectionState.none :
-            case ConnectionState.waiting :
-              retorno = Center(
-                child: CircularProgressIndicator(),
-              );
-              break;
-            case ConnectionState.active :
-            case ConnectionState.done :
-              if( snapshot.hasError ){
-                print("lista: Erro ao carregar");
-              } else {
-                print("lista: carregou!!");
+                    switch( snapshot.connectionState ){
+                      case ConnectionState.none :
+                      case ConnectionState.waiting :
+                        retorno = Center(
+                          child: CircularProgressIndicator(),
+                        );
+                        break;
+                      case ConnectionState.active :
+                      case ConnectionState.done :
+                        if( snapshot.hasError ){
+                          print("lista: Erro ao carregar");
+                        } else {
 
-                retorno = ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    itemBuilder: (context, index){
-                      List<Post>? lista = snapshot.data;
-                      Post post = lista![index];
+                          retorno = ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index){
+                                List<Post>? lista = snapshot.data;
+                                Post post = lista![index];
 
-                      return ListTile(
-                        title: Text(post.title),
-                        subtitle: Text(post.id.toString()),
-                      );
+                                return ListTile(
+                                  title: Text(post.title),
+                                  subtitle: Text(post.id.toString()),
+                                );
+                              }
+                          );
+                        }
+                        break;
                     }
-                );
-              }
-              break;
-          }
-          return retorno;
-        },
+                    return retorno;
+                  },
+                ),
+            )
+          ],
+        ),
       ),
     );
   }
