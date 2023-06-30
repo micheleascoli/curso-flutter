@@ -3,7 +3,9 @@ import 'package:youtube/Api.dart';
 import 'package:youtube/model/Video.dart';
 
 class Inicio extends StatefulWidget {
-  const Inicio({Key? key}) : super(key: key);
+  const Inicio({Key? key, required this.pesquisa}) : super(key: key);
+
+  final String pesquisa;
 
   @override
   State<Inicio> createState() => _InicioState();
@@ -11,16 +13,16 @@ class Inicio extends StatefulWidget {
 
 class _InicioState extends State<Inicio> {
 
-  _listarVideos(){
+  _listarVideos(String pesquisa){
     Api api = Api();
-    return api.pesquisar("");
+    return api.pesquisar(pesquisa);
   }
 
   @override
   Widget build(BuildContext context) {
 
     return FutureBuilder<List<Video>>(
-      future: _listarVideos(),
+      future: _listarVideos( widget.pesquisa ),
       builder: (contex, snapshot){
         switch(snapshot.connectionState){
           case ConnectionState.none :
@@ -28,7 +30,6 @@ class _InicioState extends State<Inicio> {
             return Center(
               child: CircularProgressIndicator(),
             );
-            break;
           case ConnectionState.active :
           case ConnectionState.done :
             if(snapshot.hasData){
@@ -36,8 +37,8 @@ class _InicioState extends State<Inicio> {
               return ListView.separated(
                   itemBuilder: (context, index){
 
-                    List<Video>? videos = snapshot.data;
-                    Video video = videos![index];
+                    List<Video> videos = snapshot.data!;
+                    Video video = videos[index];
 
                     return Column(
                       children: [
@@ -55,24 +56,19 @@ class _InicioState extends State<Inicio> {
                           subtitle: Text( video.canal.toString() ),
                         )
                       ],
-                    );                   
-                  }, 
+                    );
+                  },
                   separatorBuilder: (context, index) => Divider(
                     height: 3,
                     color: Colors.red,
                   ),
                   itemCount: snapshot.data!.length,
               );
-              
-              
             }else{
               return Center(
                 child: Text("Nenhum dado a ser exibido!"),
               );
             }
-            break;
-            
-          
         }
       },
     );

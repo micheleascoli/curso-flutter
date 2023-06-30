@@ -12,7 +12,6 @@ class CustomSearchDelegate extends SearchDelegate<String> {
         },
       ),
     ];
-    throw UnimplementedError();
   }
 
   @override
@@ -23,20 +22,44 @@ class CustomSearchDelegate extends SearchDelegate<String> {
         close(context, "");
       },
     );
-    throw UnimplementedError();
   }
 
   @override
   Widget buildResults(BuildContext context) {
     close(context, query);
     return Container();
-    throw UnimplementedError();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+
     return Container();
-    throw UnimplementedError();
+
+    /*
+    List<String> lista = [];
+    if (query.isNotEmpty ){
+      lista = [
+        "Android", "Android navegação", "IOS", "Jogos"
+      ].where(
+          (texto) => texto.toLowerCase().startsWith( query )
+      ).toList();
+      return ListView.builder(
+        itemCount: lista.length,
+        itemBuilder: (context, index){
+          return ListTile(
+            onTap: (){
+              close(context, lista[index]);
+            },
+            title: Text(lista[index]),
+          );
+        },
+      );
+    } else {
+      return Center(
+        child: Text("Nenhum resultado para a pesquisa!"),
+      );
+    }
+    */
   }
 
 }
