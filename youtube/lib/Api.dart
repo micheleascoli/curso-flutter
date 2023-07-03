@@ -1,44 +1,50 @@
-  import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-  import 'dart:convert';
+import 'dart:convert';
 
-  import 'package:youtube/model/Video.dart';
+import 'package:youtube/model/Video.dart';
 
-  const CHAVE_YOUTUBE = "*********************************";
-  const ID_CANAL = "UCVHFbqXqoYvEWM1Ddxl0QDg";
-  const URL_BASE = "https://www.googleapis.com/youtube/v3/";
+const CHAVE_YOUTUBE = "************************";
+const ID_CANAL = "UCVHFbqXqoYvEWM1Ddxl0QDg";
+const URL_BASE = "https://www.googleapis.com/youtube/v3/";
 
-  class Api {
+class Api {
+  pesquisar(String pesquisa) async {
 
-    Future<List<Video>> pesquisar(String pesquisa) async {
+    http.Response response =  await http.get(Uri.parse(URL_BASE + "search"
+      "?part=snippet"
+      "&type=video"
+      "&maxResults=20"
+      "&order=date"
+      "&key=$CHAVE_YOUTUBE"
+      "&channelId=$ID_CANAL"
+      "&q=$pesquisa"));
 
-      http.Response response =  await http.get(Uri.parse(URL_BASE + "search"
-        "?part=snippet"
-        "&type=video"
-        "&maxResults=20"
-        "&order=date"
-        "&key=$CHAVE_YOUTUBE"
-        "&channelId=$ID_CANAL"
-        "&q=$pesquisa"));
+    if(response.statusCode == 200){
 
-      if(response.statusCode == 200){
-        Map<String, dynamic> dadosJson = json.decode( response.body );
+      Map<String, dynamic> dadosJson = json.decode( response.body );
 
-        List<Video>  videos = dadosJson["items"].map<Video>(
-            (map){
-              return Video.fromJson(map);
-            }
-        ).toList();
+      List<Video>  videos = dadosJson["items"].map<Video>(
+          (map){
+            return Video.fromJson(map);
+          }
+      ).toList();
 
-        return videos;
+      for( var video in videos ){
+        print("Resultado: ${video.titulo}" );
+      }
 
-        /*
-        for(var video in dadosJson["items"]){
-          print("Resultado: " + video.toString());
-        } */
-        //print("resultado: "+dadosJson["items"].toString() );
-      } else {}
+      //print("Resultado: " + videos.toString());
 
-      return pesquisar(pesquisa);
+
+
+      /*
+      for(var video in dadosJson["items"]){
+        print("Resultado: " + video.toString());
+      }
+       */
+      //print("resultado: "+dadosJson["items"].toString() );
+    } else {
+      print("resultado NADAAA: ");
     }
   }
+}
