@@ -1,10 +1,9 @@
-  import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-  import 'dart:convert';
+import 'dart:convert';
 
-  import 'package:youtube/model/Video.dart';
+import 'package:youtube/model/Video.dart';
 
-  const CHAVE_YOUTUBE = "*********************************";
+  const CHAVE_YOUTUBE_API = "AIzaSyBVQC66pILe52Ix7KFQ0LT2g5kyOUAVBow";
   const ID_CANAL = "UCVHFbqXqoYvEWM1Ddxl0QDg";
   const URL_BASE = "https://www.googleapis.com/youtube/v3/";
 
@@ -17,7 +16,7 @@ import 'package:http/http.dart' as http;
         "&type=video"
         "&maxResults=20"
         "&order=date"
-        "&key=$CHAVE_YOUTUBE"
+        "&key=$CHAVE_YOUTUBE_API"
         "&channelId=$ID_CANAL"
         "&q=$pesquisa"));
 
